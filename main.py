@@ -47,6 +47,8 @@ def check_all_messages(message):
             return cards_data
         else:
             print("Failed to fetch cards:", response.text)
+
+
             return []
     # Trello API card retrieval logic
     if highest_prob_list.get('Sure, here you have:', 0) >= 1:
