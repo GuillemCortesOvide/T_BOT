@@ -1,12 +1,13 @@
 import re
 import requests
 import long_responses as long
-import keys
-from api_requests import getdata
+from keys import TRELLO_API_KEY, TRELLO_TOKEN
+
+
 
 def message_probability(user_message, recognised_words, single_response=False, required_words=[]):
     message_certainty = 0
-    has_required_words = True
+    has_required_words = False
 
     for word in user_message:
         if word in recognised_words:
@@ -15,8 +16,8 @@ def message_probability(user_message, recognised_words, single_response=False, r
     percentatge = float(message_certainty) / float(len(recognised_words))
 
     for word in required_words:
-        if word not in user_message:
-            has_required_words = False
+        if word in user_message:
+            has_required_words = True
             break
     if has_required_words or single_response:
         return int(percentatge*100)
@@ -32,26 +33,26 @@ def check_all_messages(message):
 
     # Responses --------------------------------------------------------
 
-    response("I'm T-Bot, your ticket chatbot", ["hello", "hola", "hey", "hi"], single_response=True)
+    response("I'm T-Bot, your ticket chatbot! What can I help you for?", ["hello", "hola", "hey", "hi"],
+             single_response=True)
     response("I'm doing fine, and you?", ["how", "are", "you", "doing"], required_words=['how', 'are', 'you', 'doing'])
 
     # Response for fetching Trello cards
-    response('Sure, here you have:', ['Can', 'you', 'show', 'me', 'the', 'tickets'], required_words=['show', 'tickets'])
+    response('Sure:', ['Can', 'you', 'show', 'me', 'the', 'tickets'], required_words=['you', 'show', 'tickets'])
 
     # ... other responses ...
     def get_cards():
-        api_url = f'https://api.trello.com/1/boards/64c9044d7f1bb7fc6d52bb47/cards?key={{TRELLO_API_KEY}}token={{TRELLO_TOKEN}}'
+        api_url = f"https://api.trello.com/1/boards/64c9044d7f1bb7fc6d52bb47/cards?key={TRELLO_API_KEY}token={TRELLO_TOKEN}"
         response = requests.get(api_url)
         if response.status_code == 200:
             cards_data = response.json()
             return cards_data
         else:
             print("Failed to fetch cards:", response.text)
+        return []
 
-
-            return []
     # Trello API card retrieval logic
-    if highest_prob_list.get('Sure, here you have:', 0) >= 1:
+    if highest_prob_list.get('Sure:', 0) >= 1:
         cards_data = get_cards()
         if cards_data:
             card_names = [card['name'] for card in cards_data]
@@ -67,16 +68,14 @@ def check_all_messages(message):
     else:
         return long.unknown() if highest_prob_list[best_match] < 1 else best_match
 
-
-
 def close_bot():
-    print("Tbot: Bye bye! See you next time.")
+    print("Tbot: Good Bye! See you soon.")
     exit()
 
 def get_response(user_input):
     split_message = re.split(r'\s+|,;?!.-]/s*', user_input.lower())
     response = check_all_messages(split_message)
-    return responses
+    return response
 
 
 
