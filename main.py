@@ -6,22 +6,27 @@ from keys import TRELLO_API_KEY, TRELLO_TOKEN
 # Define the responses and their associated information
 responses = [
     {
+        "text": 'Sure:',
+        "keywords": ['Can','show', 'me', 'you', 'tickets']
+    },
+    {
         "text": "I'm T-Bot, your ticket chatbot! What can I help you for?",
         "keywords": ["hello", "hola", "hey", "hi"]
+    },
+{
+        "text": "Support is divided into different tiers, each with specific tasks and estimated timeframes.\n Tier 1: \n Involves code editing and string translation, typically taking 1 or 2 days.\n Tier 2:\n Focuses on tool testing, client setup, and operations, with an estimated time of 3 to 4 days.\nTier 3:\n Addresses debugging and investigations for consistent diagnosis and solutions, but the timeframe is not predefined. This tier also includes incident investigation, tracking, and reporting.\n Note that estimated times may be adjusted based on prior assessments.",
+        "keywords": ['What', 'is', 'the', 'Definition', 'of', 'done', 'tell', 'me']
+    },
+    {
+        "text": "You're Welcome",
+        "keywords": ['Thanks', 'Thank', 'you', 'thanks']
     },
     {
         "text": "I'm doing fine, and you?",
         "keywords": ["how", "are", "you", "doing"]
     },
-    {
-        "text": "You're Welcome",
-        "keywords": ['Thanks', 'Thank you']
-    },
-    {
-        "text": 'Sure:',
-        "keywords": ['Can', 'you', 'show', 'me', 'the', 'tickets']
-    }
 ]
+
 
 highest_prob_list = {}
 
@@ -42,21 +47,26 @@ def message_probability(user_message, recognised_words):
 
 
 def check_all_messages(message):
+    highest_score = 0
+    best_response = ""
+
     for response in responses:
         message_certainty = message_probability(message, response["keywords"])
-        if message_certainty > 0:
-            highest_prob_list[response["text"]] = message_certainty
 
-            if response["text"] == 'Sure:':
-                cards_data = get_trello_cards()
-                if cards_data:
-                    card_names = [card['name'] for card in cards_data]
-                    cards_response = "Here are the cards:\n" + "\n".join(card_names)
-                    return cards_response
-                else:
-                    return "No cards found."
-            else:
-                return response["text"]
+        if message_certainty > highest_score:
+            highest_score = message_certainty
+            best_response = response["text"]
+
+    if best_response == 'Sure:':
+        cards_data = get_trello_cards()
+        if cards_data:
+            card_names = [card['name'] for card in cards_data]
+            cards_response = "Here are the cards:\n" + "\n".join(card_names)
+            return cards_response
+        else:
+            return "No cards found."
+    elif best_response:
+        return best_response
 
     return long.unknown()
 
