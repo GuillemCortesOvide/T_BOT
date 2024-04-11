@@ -19,7 +19,7 @@ To interact with T-Bot, simply run the provided Python script and start typing y
 1. Clone this repository to your local machine.
 2. Install the required dependencies.
 3. Ensure you have valid API keys for Trello (replace placeholders with your actual keys in `keys.py`).
-4. Execute the main script by running `python chatbot.py`.
+4. Execute the main script by running `python main.py` inside the T_BOT directory.
 5. Start interacting with T-Bot!
 
 ## Future Improvements
