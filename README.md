@@ -22,12 +22,6 @@ To interact with T-Bot, run the provided Python script and start typing your que
 4. Execute the main script by running `python main.py` inside the T_BOT directory.
 5. Start interacting with T-Bot!
 
-## Future Improvements
-
-- **Enhanced Natural Language Understanding**: Continuously improve T-Bot's ability to understand and respond to user queries with higher accuracy.
-- **Extended Integration Support**: Integrate T-Bot with additional project management tools and platforms to expand its functionality.
-- **Performance Optimization**: Optimize T-Bot's response time and resource utilization for better scalability.
-
 ## About the Author
 
 Guillem Cortés Ovide maintains this project. Feel free to reach out with any inquiries or suggestions.
